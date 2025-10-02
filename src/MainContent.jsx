@@ -9,6 +9,7 @@ const MainContent = ({ data }) => {
   const [activeObjectiveName, setActiveObjectiveName] = useState(
     objectives[0]?.name
   );
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const [activeMeasureName, setActiveMeasureName] = useState(
     objectives[0]?.children[0]?.name
@@ -18,6 +19,7 @@ const MainContent = ({ data }) => {
     setActiveObjectiveName(objectiveName);
     const newActiveObjective = objectives.find((o) => o.name === objectiveName);
     const newMeasures = newActiveObjective?.children || [];
+    setIsSidebarOpen(false); // Close sidebar on new objective selection
     setActiveMeasureName(newMeasures[0]?.name);
   };
 
@@ -106,10 +108,13 @@ const MainContent = ({ data }) => {
   };
 
   return (
-    <div className="pt-4 px-4 flex-grow flex flex-col">
+    <div className="pt-2 px-2 md:px-4 flex-grow flex flex-col relative">
       {/* Horizontal Goal Tabs */}
-      <div className="border-b border-gray-200 pb-3">
-        <nav className="-mb-px flex gap-2 justify-center" aria-label="Tabs">
+      <div className="border-b border-gray-200 pb-2">
+        <nav
+          className="-mb-px flex flex-wrap gap-1 justify-center"
+          aria-label="Tabs"
+        >
           {objectives.map((objective, index) => (
             <button
               key={objective.name}
@@ -122,8 +127,8 @@ const MainContent = ({ data }) => {
                   ? "bg-[var(--goal-color)] text-white font-semibold shadow-md"
                   : "bg-gray-100 text-gray-600 hover:bg-[var(--goal-color)] hover:text-white"
               } 
-              flex-1 whitespace-nowrap text-center py-3 px-4 rounded-t-lg
-              font-medium text-lg transition-all duration-300 ease-in-out
+               text-center py-2 px-3 rounded-t-lg
+              font-medium text-base transition-all duration-300 ease-in-out
               `}
             >
               {objective.name}
@@ -133,47 +138,76 @@ const MainContent = ({ data }) => {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex flex-grow mt-4 gap-4">
-        {/* Vertical Objectives Subtabs */}
-        <div className="w-1/3 flex flex-col">
-          <h2 className="text-xl font-bold text-gray-800 mb-3">Measures</h2>
-          <div className="space-y-2">
-            {measures.map((measure) => (
-              <button
-                key={measure.name}
-                onClick={() => setActiveMeasureName(measure.name)}
-                className={`w-full text-left p-4 rounded-lg transition-all duration-300 ease-in-out ${
-                  activeMeasureName === measure.name
-                    ? "bg-green-200 text-green-800 font-semibold border border-green-300 shadow"
-                    : "text-gray-600 hover:bg-green-50 hover:text-green-700"
-                }`}
-              >
-                {measure.description}
-              </button>
-            ))}
-          </div>
+      <div className="flex-grow mt-3">
+        {/* Mobile sidebar toggle */}
+        <div className="md:hidden mb-3">
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg w-full"
+          >
+            {isSidebarOpen ? "Hide" : "Show"} Measures
+          </button>
         </div>
 
-        {/* Performance Measures Content */}
-        <div className="w-2/3 flex-grow border-l border-gray-200 pl-4 flex flex-col">
-          {activeMeasure && chartConfig[activeMeasure.name] ? (
-            <div className="flex-grow bg-white p-2 rounded-lg shadow-inner border border-gray-200">
-              {renderChart()}
-            </div>
-          ) : activeMeasure ? (
-            <div className="bg-green-50 p-4 rounded-lg shadow-inner border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                {activeMeasure.description} - Performance Measures
-              </h3>
-              <ul className="list-disc list-inside space-y-3 text-gray-700">
-                {performanceMeasureContent.map((pm) => (
-                  <li key={pm.name}>{pm.name}</li>
-                ))}
-              </ul>
-            </div>
-          ) : (
-            <p>Select a measure to see its details.</p>
+        <div className="flex flex-col md:flex-row flex-grow gap-3 md:h-[400px]">
+          {/* Sidebar for measures (subtabs) */}
+          {/* Overlay on mobile, static on desktop */}
+          {isSidebarOpen && (
+            <div
+              className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-10"
+              onClick={() => setIsSidebarOpen(false)}
+            ></div>
           )}
+          <div
+            className={`
+            flex flex-col 
+            md:w-1/3 md:relative md:translate-x-0 md:bg-transparent md:p-0 md:shadow-none md:border-none
+            fixed top-0 left-0 h-full w-4/5 max-w-sm bg-white p-4 shadow-xl z-20 transition-transform duration-300 ease-in-out
+            ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+          `}
+          >
+            <h2 className="text-xl font-bold text-gray-800 mb-3">Measures</h2>
+            <div className="space-y-2 overflow-y-auto">
+              {measures.map((measure) => (
+                <button
+                  key={measure.name}
+                  onClick={() => {
+                    setActiveMeasureName(measure.name);
+                    setIsSidebarOpen(false); // Close sidebar on selection
+                  }}
+                  className={`w-full text-left p-4 rounded-lg transition-all duration-300 ease-in-out ${
+                    activeMeasureName === measure.name
+                      ? "bg-green-200 text-green-800 font-semibold border border-green-300 shadow"
+                      : "text-gray-600 hover:bg-green-50 hover:text-green-700"
+                  }`}
+                >
+                  {measure.description}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Performance Measures Content */}
+          <div className="w-full md:w-2/3 flex-grow md:border-l md:border-gray-200 md:pl-3 flex flex-col min-h-[400px] md:min-h-0">
+            {activeMeasure && chartConfig[activeMeasure.name] ? ( // This div below is the direct parent of the chart
+              <div className="flex-grow bg-white p-2 rounded-lg shadow-inner border border-gray-200">
+                {renderChart()}
+              </div>
+            ) : activeMeasure ? (
+              <div className="bg-green-50 p-4 rounded-lg shadow-inner border border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                  {activeMeasure.description} - Performance Measures
+                </h3>
+                <ul className="list-disc list-inside space-y-3 text-gray-700">
+                  {performanceMeasureContent.map((pm) => (
+                    <li key={pm.name}>{pm.name}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <p>Select a measure to see its details.</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
