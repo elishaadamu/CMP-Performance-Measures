@@ -14,7 +14,7 @@ const HierarchicalTree = () => {
         children: [
           {
             name: "Travel Times",
-            description: "Reduce average travel times (TTI)",
+            description: "Travel Time",
             children: [
               {
                 name: "Average travel time during AM and PM peak periods",
@@ -23,7 +23,7 @@ const HierarchicalTree = () => {
           },
           {
             name: "Delay",
-            description: "Annual Peak Hours of Excessive Delay (PHED)",
+            description: "Delay",
             children: [
               {
                 name: "Annual Hours of Peak Hours Excessive Delay (PHED)",
@@ -32,7 +32,7 @@ const HierarchicalTree = () => {
           },
           {
             name: "Non-SOV Travel",
-            description: "Percent of Non-SOV travel",
+            description: "Drive Alone",
             children: [
               {
                 name: "Percent of non-Single Occupant Vehicle (SOV) travel",
@@ -48,7 +48,7 @@ const HierarchicalTree = () => {
         children: [
           {
             name: "Travel Time Reliability",
-            description: "Improve travel-time reliability (PTI)",
+            description: "Reliability",
             children: [
               {
                 name: "Planning Time Index (95th percentile travel time / free-flow travel time)",
@@ -57,7 +57,7 @@ const HierarchicalTree = () => {
           },
           {
             name: "Freight Reliability",
-            description: "Improve travel-time reliability (TTTR)",
+            description: " Truck Reliability",
             children: [
               {
                 name: "Average Truck Travel Time Reliability Index (TTTRI)",
@@ -66,8 +66,7 @@ const HierarchicalTree = () => {
           },
           {
             name: "Interstate Reliability",
-            description:
-              "Percent of Person-Miles Traveled on the Interstate that are reliable",
+            description: "Miles Traveled (Interstate)",
             children: [
               {
                 name: "Percent of person-miles traveled on Interstate system that are reliable",
@@ -76,8 +75,7 @@ const HierarchicalTree = () => {
           },
           {
             name: "Non-Interstate Reliability",
-            description:
-              "Percent of Person-Miles Traveled on the Non-Interstate that are reliable",
+            description: "Miles Traveled (Non-Interstate)",
             children: [
               {
                 name: "Percent of person-miles traveled on non-Interstate system that are reliable",
@@ -92,37 +90,34 @@ const HierarchicalTree = () => {
         children: [
           {
             name: "Trip Length",
-            description: "Average trip length by mode",
+            description: "Trip Length",
             children: [
               {
-                name: "Average trip length by mode",
+                name: "Trip Length",
               },
             ],
           },
           {
             name: "EJ Access",
-            description:
-              "Percentage of EJ population within a ½-mile walk of transit stop",
+            description: "EJ-Transit Access",
             children: [
               {
-                name: "Percentage of EJ population within a ½-mile walk of transit stop",
+                name: "EJ-Transit Access",
               },
             ],
           },
           {
             name: "Job Access",
-            description:
-              "Number of jobs accessible within 30 minutes by transit, walking, or biking",
+            description: "Transit-Job Access",
             children: [
               {
-                name: "Number of jobs accessible within 30 minutes by transit",
+                name: "Transit-Job Access",
               },
             ],
           },
           {
             name: "Accessibility",
-            description:
-              "Percentage of population within ½ mile of transit stop",
+            description: "Assess",
             children: [
               {
                 name: "Percentage of population within ½ mile of transit stops",
@@ -137,19 +132,10 @@ const HierarchicalTree = () => {
         children: [
           {
             name: "Fatalities",
-            description: "Total number of motor vehicle fatalities",
+            description: "Fatality - Injury",
             children: [
               {
-                name: "Total number of motor vehicle fatalities",
-              },
-            ],
-          },
-          {
-            name: "Injuries",
-            description: "Total number of serious injuries",
-            children: [
-              {
-                name: "Total number of serious injuries",
+                name: "Fatality - Injury",
               },
             ],
           },

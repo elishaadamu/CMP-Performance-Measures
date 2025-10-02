@@ -450,9 +450,8 @@ const MainContent = ({ data }) => {
             ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
           `}
           >
-            <h2 className="text-xl font-bold text-gray-100 mb-3 capitalize">
-              <span className="text-gray-400">Measures:</span>{" "}
-              <span className="">{activeObjective?.measures}</span>
+            <h2 className="text-xl font-bold  text-gray-100 mb-3 capitalize">
+              <span className="p-3 text-bl">Measures</span>{" "}
             </h2>
             <div className="space-y-2 overflow-y-auto">
               {measures.map((measure) => (
@@ -475,7 +474,7 @@ const MainContent = ({ data }) => {
           </div>
 
           {/* Performance Measures Content */}
-          <div className="w-full md:w-2/3 flex-grow md:border-l md:border-gray-700 md:pl-3 flex flex-col min-h-[400px] md:min-h-0">
+          <div className="w-full md:w-2/3 flex-grow md:border-l md:border-gray-700 md:pl-3 flex flex-col min-h-[600px] md:min-h-0">
             {activeMeasure && chartConfig[activeMeasure.name] ? ( // This div below is the direct parent of the chart
               <div className="flex-grow bg-gray-800 p-2 rounded-lg shadow-inner border border-gray-700">
                 {renderChart()}
