@@ -433,7 +433,7 @@ const MainContent = ({ data }) => {
           </button>
         </div>
 
-        <div className="flex flex-col md:flex-row flex-grow gap-3 md:h-[400px]">
+        <div className="flex flex-col md:flex-row flex-grow gap-3 md:h-[700px]">
           {/* Sidebar for measures (subtabs) */}
           {/* Overlay on mobile, static on desktop */}
           {isSidebarOpen && (
@@ -476,8 +476,44 @@ const MainContent = ({ data }) => {
           {/* Performance Measures Content */}
           <div className="w-full md:w-2/3 flex-grow md:border-l md:border-gray-700 md:pl-3 flex flex-col min-h-[600px] md:min-h-0">
             {activeMeasure && chartConfig[activeMeasure.name] ? ( // This div below is the direct parent of the chart
-              <div className="flex-grow bg-gray-800 p-2 rounded-lg shadow-inner border border-gray-700">
+              <div className="flex-grow bg-gray-800 p-2 rounded-lg shadow-inner border border-gray-700 flex flex-col">
                 {renderChart()}
+                {activeMeasure.name === "Travel Times" && (
+                  <div className="mt-4 flex-grow">
+                    <iframe
+                      src="/iframe/cmp_lf_tti.html" // TTI Map
+                      style={{ width: "100%", height: "100%", border: "none" }}
+                      title="Travel Time Index"
+                    ></iframe>
+                  </div>
+                )}
+                {activeMeasure.name === "Travel Time Reliability" && (
+                  <div className="mt-4 flex-grow">
+                    <iframe
+                      src="/iframe/cmp_lf_lottr.html" // LOTTR Map
+                      style={{ width: "100%", height: "100%", border: "none" }}
+                      title="Level of Travel Time Reliability"
+                    ></iframe>
+                  </div>
+                )}
+                {activeMeasure.name === "Freight Reliability" && (
+                  <div className="mt-4 flex-grow">
+                    <iframe
+                      src="/iframe/cmp_lf_tttr.html" // TTTR Map
+                      style={{ width: "100%", height: "100%", border: "none" }}
+                      title="Truck Travel Time Reliability"
+                    ></iframe>
+                  </div>
+                )}
+                {activeMeasure.name === "Fatalities" && (
+                  <div className="mt-4 flex-grow">
+                    <iframe
+                      src="/iframe/cmp_tti_crash.html" // Crash Map
+                      style={{ width: "100%", height: "100%", border: "none" }}
+                      title="Crash Hotspots"
+                    ></iframe>
+                  </div>
+                )}
               </div>
             ) : activeMeasure ? (
               <div className="flex-grow bg-gray-800 p-2 rounded-lg shadow-inner border border-gray-700 flex items-center justify-center">
