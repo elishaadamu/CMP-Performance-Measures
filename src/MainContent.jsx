@@ -106,6 +106,7 @@ const MainContent = ({ data }) => {
         },
       },
       "Travel Time Reliability": {
+        // Updated
         component: LineChart,
         props: {
           data: chartData["Travel Time Reliability"],
@@ -113,15 +114,12 @@ const MainContent = ({ data }) => {
           lines: [
             { key: "AM", name: "AM Peak", color: "#a8a4e8" },
             { key: "PM", name: "PM Peak", color: "#82ca9d" },
-          ].filter(
-            (line) => !toggledLegends["Travel Time Reliability"]?.[line.key]
-          ),
+          ].filter((line) => !toggledLegends["Travel Times"]?.[line.key]),
           xAxisKey: "year",
-          yAxisLabel: "Planning Time Index",
-          isPercentage: false, // Explicitly set for clarity
+          yAxisLabel: "Travel Time Index",
           onLegendClick: (dataKey) =>
-            handleLegendClick("Travel Time Reliability", dataKey),
-          toggledLegends: toggledLegends["Travel Time Reliability"],
+            handleLegendClick("Travel Times", dataKey),
+          toggledLegends: toggledLegends["Travel Times"],
           originalLines: [
             { key: "AM", name: "AM Peak", color: "#a8a4e8" },
             { key: "PM", name: "PM Peak", color: "#82ca9d" },
