@@ -60,7 +60,7 @@ const LineChart = ({
 
   return (
     <div className="w-full h-full flex flex-col">
-      <h3 className="text-lg font-bold text-center text-gray-100 mb-4">
+      <h3 className="text-3xl font-bold text-center text-[var(--chart-title-color)] mb-4">
         {title}
       </h3>
       <div className="flex-grow">

@@ -391,7 +391,10 @@ const MainContent = ({ data }) => {
   return (
     <div
       className="pt-2 px-2 md:px-4 flex-grow flex flex-col relative"
-      style={{ "--active-goal-color": activeGoalColor }}
+      style={{
+        "--active-goal-color": activeGoalColor,
+        "--chart-title-color": activeGoalColor,
+      }}
     >
       {/* Horizontal Goal Tabs */}
       <div className="border-b border-gray-700 pb-2 sticky top-0 pt-3 bg-gray-900 z-10">
@@ -491,8 +494,8 @@ const MainContent = ({ data }) => {
                 {renderChart()}
                 {activeMeasure.name === "Travel Times" && (
                   <>
-                    <hr className="mt-10" />
-                    <h1 className="mb-8 text-3xl text-center border-top mt-10 font-bold text-gray-100 ">
+                    <hr className="mt-10 border-gray-700" />
+                    <h1 className="mb-8 text-3xl text-center border-top mt-10 font-bold text-[var(--chart-title-color)]">
                       Congestion Locations
                     </h1>
 
@@ -511,8 +514,8 @@ const MainContent = ({ data }) => {
                 )}
                 {activeMeasure.name === "Travel Time Reliability" && (
                   <>
-                    <hr className="mt-10" />
-                    <h1 className="mb-8 text-3xl text-center border-top mt-10 font-bold text-gray-100 ">
+                    <hr className="mt-10 border-gray-700" />
+                    <h1 className="mb-8 text-3xl text-center border-top mt-10 font-bold text-[var(--chart-title-color)]">
                       Reliability Locations
                     </h1>
                     <div className="mt-4 flex-grow">
@@ -530,9 +533,9 @@ const MainContent = ({ data }) => {
                 )}
                 {activeMeasure.name === "Freight Reliability" && (
                   <>
-                    <hr className="mt-10" />
+                    <hr className="mt-10 border-gray-700" />
 
-                    <h1 className="mb-8 text-3xl text-center border-top mt-10 font-bold text-gray-100 ">
+                    <h1 className="mb-8 text-3xl text-center border-top mt-10 font-bold text-[var(--chart-title-color)]">
                       Freight Reliability Locations
                     </h1>
 
@@ -551,8 +554,8 @@ const MainContent = ({ data }) => {
                 )}
                 {activeMeasure.name === "Fatalities" && (
                   <>
-                    <hr className="mt-10" />
-                    <h3 className="mb-8 text-3xl text-center border-top mt-10 font-bold text-gray-100 ">
+                    <hr className="mt-10 border-gray-700" />
+                    <h3 className="mb-8 text-3xl text-center border-top mt-10 font-bold text-[var(--chart-title-color)]">
                       Congestion and Crashes
                     </h3>
                     <div className="mt-4 flex-grow">
