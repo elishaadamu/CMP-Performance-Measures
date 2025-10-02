@@ -97,6 +97,7 @@ const ComposedChart = ({
             name={bar.name}
             fill={bar.color}
             yAxisId="left"
+            stackId={bar.stackId}
           />
         ))}
 

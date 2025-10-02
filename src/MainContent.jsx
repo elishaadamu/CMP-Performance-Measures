@@ -5,8 +5,6 @@ import BarChart from "./charts/BarChart.jsx";
 import StackedBarChart from "./charts/StackedBarChart.jsx";
 import ComposedChart from "./charts/ComposedChart.jsx";
 
-const goalColors = ["#b6cb1a", "#f87c01", "#0481f7", "#3cbcb6", "#e34c00"];
-
 const MainContent = ({ data }) => {
   const objectives = data.children;
   const [activeObjectiveName, setActiveObjectiveName] = useState(
@@ -59,78 +57,98 @@ const MainContent = ({ data }) => {
     fetchData();
   }, []);
 
-  // --- Sample Data and Chart Configuration ---
-  const chartConfig = {
-    "Travel Times": {
-      component: LineChart,
-      props: {
-        data: chartData["Travel Times"],
-        title: "Average Travel Time Index (TTI)",
-        lines: [
-          { key: "AM", name: "AM Peak", color: "#8884d8" },
-          { key: "PM", name: "PM Peak", color: "#82ca9d" },
-        ],
-        xAxisKey: "year",
-        yAxisLabel: "TTI",
+  // --- Chart Configuration (moved inside to react to chartData changes) ---
+  const chartConfig = React.useMemo(
+    () => ({
+      "Travel Times": {
+        component: LineChart,
+        props: {
+          data: chartData["Travel Times"],
+          title: "Average Travel Time Index (TTI)",
+          lines: [
+            { key: "AM", name: "AM Peak", color: "#8884d8" },
+            { key: "PM", name: "PM Peak", color: "#82ca9d" },
+          ],
+          xAxisKey: "year",
+          yAxisLabel: "Travel Time Index",
+        },
       },
-    },
-    "Travel Time Reliability": {
-      component: LineChart,
-      props: {
-        data: chartData["Travel Time Reliability"],
-        title: "Planning Time Index (PTI)",
-        lines: [
-          { key: "AM", name: "AM Peak", color: "#8884d8" },
-          { key: "PM", name: "PM Peak", color: "#82ca9d" },
-        ],
-        xAxisKey: "Year",
-        yAxisLabel: "PTI",
+      "Travel Time Reliability": {
+        component: LineChart,
+        props: {
+          data: chartData["Travel Time Reliability"],
+          title: "Planning Time Index (PTI)",
+          lines: [
+            { key: "AM", name: "AM Peak", color: "#8884d8" },
+            { key: "PM", name: "PM Peak", color: "#82ca9d" },
+          ],
+          xAxisKey: "Year",
+          yAxisLabel: "Commute Time (minutes)",
+        },
       },
-    },
-    "Trip Length": {
-      component: StackedBarChart,
-      props: {
-        data: chartData["Trip Length"],
-        title: "Average Trip Length by Mode",
-        keys: [
-          { key: "DA", name: "Drive Alone" },
-          { key: "cp", name: "Carpool" },
-          { key: "pt", name: "Public Transit" },
-        ],
-        xAxisKey: "year",
-        yAxisLabel: "Average Trip Length (minutes)",
-        groupBy: "NAME",
+      "Trip Length": {
+        component: ComposedChart,
+        props: {
+          data: chartData["Trip Length"],
+          title: "Average Trip Length by Mode",
+          bars: [
+            { key: "DA", name: "Drive Alone", color: "#b6cb1a", stackId: "a" },
+            { key: "cp", name: "Carpool", color: "#f87c01", stackId: "a" },
+            {
+              key: "pt",
+              name: "Public Transit",
+              color: "#0481f7",
+              stackId: "a",
+            },
+          ],
+          lines: [
+            {
+              key: "overall",
+              name: "Overall",
+              color: "#333333",
+              yAxisId: "left",
+            },
+          ],
+          xAxisKey: "year",
+          yAxisLabel: "Commute Time (minutes)",
+        },
       },
-    },
-    Fatalities: {
-      component: ComposedChart,
-      props: {
-        data: chartData["Fatalities"],
-        title: "Safety Performance",
-        bars: [
-          { key: "Fatalities", name: "Fatalities", color: "#8884d8" },
-          { key: "SI", name: "Serious Injuries", color: "#82ca9d" },
-        ],
-        lines: [
-          {
-            key: "fat_rate",
-            name: "Fatality Rate",
-            color: "#ff7300",
-            yAxisId: "right",
-          },
-          {
-            key: "si_rate",
-            name: "Serious Injury Rate",
-            color: "#387908",
-            yAxisId: "right",
-          },
-        ],
-        xAxisKey: "year",
-        yAxisLabel: "Count",
-        yAxisLabelRight: "Rate",
+      Fatalities: {
+        component: ComposedChart,
+        props: {
+          data: chartData["Fatalities"],
+          title: "Safety Performance",
+          bars: [
+            { key: "Fatalities", name: "Fatalities", color: "#8884d8" },
+            { key: "SI", name: "Serious Injuries", color: "#82ca9d" },
+            {
+              key: "nm_fsi",
+              name: "Non-Motorized FSI",
+              color: "#ffc658",
+            },
+          ],
+          lines: [
+            {
+              key: "fat_rate",
+              name: "Fatality Rate",
+              color: "#ff7300",
+              yAxisId: "right",
+            },
+            {
+              key: "si_rate",
+              name: "Serious Injury Rate",
+              color: "#387908",
+              yAxisId: "right",
+            },
+          ],
+          xAxisKey: "year",
+          yAxisLabel: "Fatalities / Serious Injuries",
+          yAxisLabelRight: "Rate",
+        },
       },
-    },
-  };
+    }),
+    [chartData]
+  ); // Dependency array for useMemo
 
   const renderChart = () => {
     const config = chartConfig[activeMeasure.name];
@@ -144,6 +162,8 @@ const MainContent = ({ data }) => {
     const ChartComponent = config.component;
     return <ChartComponent {...config.props} />;
   };
+
+  const goalColors = ["#b6cb1a", "#f87c01", "#0481f7", "#3cbcb6", "#e34c00"]; // Moved inside to be accessible
 
   return (
     <div className="pt-2 px-2 md:px-4 flex-grow flex flex-col relative">
@@ -163,7 +183,7 @@ const MainContent = ({ data }) => {
               className={`${
                 activeObjectiveName === objective.name
                   ? "bg-[var(--goal-color)] text-white font-semibold shadow-md"
-                  : "bg-gray-100 text-gray-600 hover:bg-[var(--goal-color)] hover:text-white"
+                  : "bg-gray-100 border border-gray-500 text-gray-600 hover:bg-[var(--goal-color)] hover:text-white"
               } 
                text-center py-2 px-3 rounded-t-lg
               font-medium text-base transition-all duration-300 ease-in-out
