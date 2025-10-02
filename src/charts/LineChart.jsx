@@ -14,8 +14,8 @@ import {
 const CustomTooltip = ({ active, payload, label, yAxisLabel }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white p-3 border border-gray-300 rounded-lg shadow-lg">
-        <p className="font-bold text-gray-800">{`Year: ${label}`}</p>
+      <div className="bg-gray-700 bg-opacity-90 text-white p-3 border border-gray-500 rounded-lg shadow-lg">
+        <p className="font-bold">{`Year: ${label}`}</p>
         {payload.map((pld) => (
           <div
             key={pld.dataKey}
@@ -38,56 +38,98 @@ const CustomTooltip = ({ active, payload, label, yAxisLabel }) => {
   return null;
 };
 
-const LineChart = ({ data, title, lines, xAxisKey, yAxisLabel }) => {
+const LineChart = ({
+  data,
+  title,
+  lines,
+  xAxisKey,
+  yAxisLabel,
+  legendFontSize,
+  yAxisTickFormatter,
+  onLegendClick,
+  toggledLegends = {},
+  originalLines,
+}) => {
+  const legendPayload = (originalLines || lines).map((line) => ({
+    value: line.name,
+    type: "line",
+    id: line.key,
+    color: toggledLegends[line.key] ? "#ccc" : line.color,
+  }));
+
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <RechartsLineChart
-        data={data}
-        margin={{
-          top: 20,
-          right: 30,
-          left: 20,
-          bottom: 20,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey={xAxisKey} tickFormatter={(tick) => tick.toString()}>
-          <Label
-            value={xAxisKey.charAt(0).toUpperCase() + xAxisKey.slice(1)}
-            offset={-15}
-            position="insideBottom"
-          />
-        </XAxis>
-        <YAxis
-          domain={["dataMin - 0.05", "dataMax + 0.05"]}
-          tickFormatter={(tick) => tick.toFixed(2)}
-        >
-          <Label
-            value={yAxisLabel}
-            angle={-90}
-            position="insideLeft"
-            style={{ textAnchor: "middle" }}
-          />
-        </YAxis>
-        <Tooltip content={<CustomTooltip yAxisLabel={yAxisLabel} />} />
-        <Legend
-          verticalAlign="top"
-          height={36}
-          wrapperStyle={{ color: "black", fontWeight: "bold" }}
-        />
-        {lines.map((line) => (
-          <Line
-            key={line.key}
-            type="cardinal"
-            dataKey={line.key}
-            name={line.name}
-            stroke={line.color}
-            strokeWidth={3}
-            activeDot={{ r: 8 }}
-          />
-        ))}
-      </RechartsLineChart>
-    </ResponsiveContainer>
+    <div className="w-full h-full flex flex-col">
+      <h3 className="text-lg font-bold text-center text-gray-100 mb-4">
+        {title}
+      </h3>
+      <div className="flex-grow">
+        <ResponsiveContainer width="100%" height="100%">
+          <RechartsLineChart
+            data={data}
+            margin={{
+              top: 20, // Increased top margin for legend
+              right: 30,
+              left: 50,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" stroke="#555" />
+            <XAxis
+              dataKey={xAxisKey}
+              tickFormatter={(tick) => tick.toString()}
+              tick={{ fill: "#ccc" }}
+            >
+              <Label
+                value={xAxisKey.charAt(0).toUpperCase() + xAxisKey.slice(1)}
+                offset={-15}
+                position="insideBottom"
+                fill="#ccc"
+              />
+            </XAxis>
+            <YAxis
+              domain={["dataMin - 0.05", "dataMax + 0.05"]}
+              tickFormatter={
+                yAxisTickFormatter
+                  ? yAxisTickFormatter
+                  : (tick) => tick.toFixed(2)
+              }
+              tick={{ fill: "#ccc" }}
+            >
+              <Label
+                value={yAxisLabel}
+                angle={-90}
+                position="insideLeft"
+                style={{ textAnchor: "middle" }}
+                fill="#ccc"
+              />
+            </YAxis>
+            <Tooltip content={<CustomTooltip yAxisLabel={yAxisLabel} />} />
+            <Legend
+              verticalAlign="top"
+              height={36}
+              payload={legendPayload}
+              onClick={(e) => onLegendClick && onLegendClick(e.id)}
+              wrapperStyle={{
+                color: "#fff",
+                fontWeight: "bold",
+                fontSize: legendFontSize || "14px",
+              }}
+            />
+            {lines.map((line) => (
+              <Line
+                key={line.key}
+                type="cardinal"
+                dataKey={line.key}
+                name={line.name}
+                stroke={line.color}
+                strokeWidth={3}
+                activeDot={{ r: 8 }}
+              />
+            ))}
+          </RechartsLineChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
   );
 };
 

@@ -84,7 +84,7 @@ const HierarchicalTree = () => {
         ],
       },
       {
-        name: " Access",
+        name: "Access",
         children: [
           {
             name: "Trip Length",
@@ -154,7 +154,7 @@ const HierarchicalTree = () => {
   };
 
   return (
-    <div className="bg-gray-50 pb-6 min-h-screen flex flex-col">
+    <div className="bg-gray-900 text-gray-200 pb-6 min-h-screen flex flex-col">
       <Header />
       <MainContent data={data} />
     </div>
