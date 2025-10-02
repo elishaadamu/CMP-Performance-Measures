@@ -394,7 +394,7 @@ const MainContent = ({ data }) => {
       style={{ "--active-goal-color": activeGoalColor }}
     >
       {/* Horizontal Goal Tabs */}
-      <div className="border-b border-gray-700 pb-2">
+      <div className="border-b border-gray-700 pb-2 sticky top-0 pt-3 bg-gray-900 z-10">
         <nav
           className="-mb-px flex flex-wrap gap-4 justify-center"
           aria-label="Tabs"
@@ -433,7 +433,18 @@ const MainContent = ({ data }) => {
           </button>
         </div>
 
-        <div className="flex flex-col md:flex-row flex-grow gap-3 md:h-[1000px]">
+        <div
+          className={`flex flex-col md:flex-row flex-grow gap-3 ${
+            [
+              "Travel Times",
+              "Travel Time Reliability",
+              "Freight Reliability",
+              "Fatalities",
+            ].includes(activeMeasure?.name)
+              ? "md:h-[1000px]"
+              : "md:h-[400px]"
+          }`}
+        >
           {/* Sidebar for measures (subtabs) */}
           {/* Overlay on mobile, static on desktop */}
           {isSidebarOpen && (
@@ -444,14 +455,14 @@ const MainContent = ({ data }) => {
           )}
           <div
             className={`
-            flex flex-col 
-            md:w-1/3 md:relative md:translate-x-0 md:bg-transparent md:p-0 md:shadow-none
-            fixed top-0 left-0 h-full w-4/5 max-w-sm bg-gray-800 p-4 shadow-xl z-20 transition-transform duration-300 ease-in-out
+            flex flex-col
+            md:w-1/3 md:sticky md:top-16 md:self-start md:h-auto md:max-h-[calc(100vh-9rem)] md:overflow-y-auto
+            fixed top-0 left-0 h-full w-4/5 max-w-sm bg-gray-800 p-4 shadow-xl z-20 transition-transform duration-300 ease-in-out md:translate-x-0
             ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
           `}
           >
             <h2 className="text-xl font-bold  text-gray-100 mb-3 capitalize">
-              <span className="p-3 text-bl">Measures</span>{" "}
+              <span className="p-3 text-bl">Measures</span>
             </h2>
             <div className="space-y-2 overflow-y-auto">
               {measures.map((measure) => (
@@ -474,7 +485,7 @@ const MainContent = ({ data }) => {
           </div>
 
           {/* Performance Measures Content */}
-          <div className="w-full md:w-2/3 flex-grow md:border-l md:border-gray-700 md:pl-3 flex flex-col min-h-[500px] md:min-h-0">
+          <div className="w-full md:w-2/3 flex-grow md:pl-3 flex flex-col min-h-[500px] md:min-h-0">
             {activeMeasure && chartConfig[activeMeasure.name] ? ( // This div below is the direct parent of the chart
               <div className="flex-grow bg-gray-800 p-2 rounded-lg shadow-inner border border-gray-700 flex flex-col">
                 {renderChart()}
