@@ -490,40 +490,83 @@ const MainContent = ({ data }) => {
               <div className="flex-grow bg-gray-800 p-2 rounded-lg shadow-inner border border-gray-700 flex flex-col">
                 {renderChart()}
                 {activeMeasure.name === "Travel Times" && (
-                  <div className="mt-4 flex-grow">
-                    <iframe
-                      src="/iframe/cmp_lf_tti.html" // TTI Map
-                      style={{ width: "100%", height: "500px", border: "none" }}
-                      title="Travel Time Index"
-                    ></iframe>
-                  </div>
+                  <>
+                    <hr className="mt-10" />
+                    <h1 className="mb-8 text-3xl text-center border-top mt-10 font-bold text-gray-100 ">
+                      Congestion Locations
+                    </h1>
+
+                    <div className="mt-4 flex-grow">
+                      <iframe
+                        src="/iframe/cmp_lf_tti.html" // TTI Map
+                        style={{
+                          width: "100%",
+                          height: "500px",
+                          border: "none",
+                        }}
+                        title="Congestion Locations"
+                      ></iframe>
+                    </div>
+                  </>
                 )}
                 {activeMeasure.name === "Travel Time Reliability" && (
-                  <div className="mt-4 flex-grow">
-                    <iframe
-                      src="/iframe/cmp_lf_lottr.html" // LOTTR Map
-                      style={{ width: "100%", height: "500px", border: "none" }}
-                      title="Level of Travel Time Reliability"
-                    ></iframe>
-                  </div>
+                  <>
+                    <hr className="mt-10" />
+                    <h1 className="mb-8 text-3xl text-center border-top mt-10 font-bold text-gray-100 ">
+                      Reliability Locations
+                    </h1>
+                    <div className="mt-4 flex-grow">
+                      <iframe
+                        src="/iframe/cmp_lf_lottr.html" // LOTTR Map
+                        style={{
+                          width: "100%",
+                          height: "500px",
+                          border: "none",
+                        }}
+                        title="Reliability Locations"
+                      ></iframe>
+                    </div>
+                  </>
                 )}
                 {activeMeasure.name === "Freight Reliability" && (
-                  <div className="mt-4 flex-grow">
-                    <iframe
-                      src="/iframe/cmp_lf_tttr.html" // TTTR Map
-                      style={{ width: "100%", height: "500px", border: "none" }}
-                      title="Truck Travel Time Reliability"
-                    ></iframe>
-                  </div>
+                  <>
+                    <hr className="mt-10" />
+
+                    <h1 className="mb-8 text-3xl text-center border-top mt-10 font-bold text-gray-100 ">
+                      Freight Reliability Locations
+                    </h1>
+
+                    <div className="mt-4 flex-grow">
+                      <iframe
+                        src="/iframe/cmp_lf_tttr.html" // TTTR Map
+                        style={{
+                          width: "100%",
+                          height: "500px",
+                          border: "none",
+                        }}
+                        title="Freight Reliability Locations"
+                      ></iframe>
+                    </div>
+                  </>
                 )}
                 {activeMeasure.name === "Fatalities" && (
-                  <div className="mt-4 flex-grow">
-                    <iframe
-                      src="/iframe/cmp_tti_crash.html" // Crash Map
-                      style={{ width: "100%", height: "500px", border: "none" }}
-                      title="Crash Hotspots"
-                    ></iframe>
-                  </div>
+                  <>
+                    <hr className="mt-10" />
+                    <h3 className="mb-8 text-3xl text-center border-top mt-10 font-bold text-gray-100 ">
+                      Congestion and Crashes
+                    </h3>
+                    <div className="mt-4 flex-grow">
+                      <iframe
+                        src="/iframe/cmp_tti_crash.html" // Crash Map
+                        style={{
+                          width: "100%",
+                          height: "500px",
+                          border: "none",
+                        }}
+                        title="Congestion and crashes"
+                      ></iframe>
+                    </div>
+                  </>
                 )}
               </div>
             ) : activeMeasure ? (
