@@ -117,7 +117,7 @@ const HierarchicalTree = () => {
           },
           {
             name: "Accessibility",
-            description: "Assess",
+            description: "Access",
             children: [
               {
                 name: "Percentage of population within ½ mile of transit stops",
