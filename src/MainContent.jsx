@@ -63,14 +63,12 @@ const MainContent = ({ data }) => {
       for (const key in dataSources) {
         try {
           const csvData = await d3.csv(dataSources[key]);
-          // Ensure numeric values are parsed correctly, especially for the Delay chart
-          if (key === "Delay") {
-            csvData.forEach((d) => {
-              d.PHED = +d.PHED;
-              d.TotalPopulation = +d.TotalPopulation;
-              d.PHEDperCapita = +d.PHEDperCapita;
-            });
-          }
+          // Generic numeric conversion for all loaded data
+          csvData.forEach((d) => {
+            for (const prop in d) {
+              if (!isNaN(d[prop]) && d[prop] !== "") d[prop] = +d[prop];
+            }
+          });
           loadedData[key] = csvData;
         } catch (error) {
           console.error(`Error loading data for ${key}:`, error);
@@ -119,7 +117,8 @@ const MainContent = ({ data }) => {
             (line) => !toggledLegends["Travel Time Reliability"]?.[line.key]
           ),
           xAxisKey: "year",
-          yAxisLabel: "Commute Time (minutes)",
+          yAxisLabel: "Planning Time Index",
+          isPercentage: false, // Explicitly set for clarity
           onLegendClick: (dataKey) =>
             handleLegendClick("Travel Time Reliability", dataKey),
           toggledLegends: toggledLegends["Travel Time Reliability"],
@@ -383,10 +382,19 @@ const MainContent = ({ data }) => {
     return <ChartComponent {...config.props} />;
   };
 
-  const goalColors = ["#b6cb1a", "#f87c01", "#0481f7", "#3cbcb6", "#e34c00"]; // Moved inside to be accessible
+  const goalColors = ["#eec722", "#6273d1", "#3799dc", "#e33bba", "#46b96e"];
+
+  const activeObjectiveIndex = objectives.findIndex(
+    (o) => o.name === activeObjectiveName
+  );
+  const activeGoalColor =
+    goalColors[activeObjectiveIndex % goalColors.length] || "#46b96e";
 
   return (
-    <div className="pt-2 px-2 md:px-4 flex-grow flex flex-col relative">
+    <div
+      className="pt-2 px-2 md:px-4 flex-grow flex flex-col relative"
+      style={{ "--active-goal-color": activeGoalColor }}
+    >
       {/* Horizontal Goal Tabs */}
       <div className="border-b border-gray-700 pb-2">
         <nav
@@ -404,7 +412,7 @@ const MainContent = ({ data }) => {
                 activeObjectiveName === objective.name
                   ? "bg-[var(--goal-color)] text-white font-semibold shadow-md"
                   : "bg-gray-800 border border-gray-600 text-gray-300 hover:bg-[var(--goal-color)] hover:text-white"
-              } 
+              }
                text-center py-2 px-3 rounded-t-lg
               font-medium text-base transition-all duration-300 ease-in-out
               `}
@@ -444,7 +452,10 @@ const MainContent = ({ data }) => {
             ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
           `}
           >
-            <h2 className="text-xl font-bold text-gray-100 mb-3">Measures</h2>
+            <h2 className="text-xl font-bold text-gray-100 mb-3 capitalize">
+              <span className="text-gray-400">Measures:</span>{" "}
+              <span className="">{activeObjective?.measures}</span>
+            </h2>
             <div className="space-y-2 overflow-y-auto">
               {measures.map((measure) => (
                 <button
@@ -455,7 +466,7 @@ const MainContent = ({ data }) => {
                   }}
                   className={`w-full text-left p-4 rounded-lg transition-all duration-300 ease-in-out ${
                     activeMeasureName === measure.name
-                      ? "bg-green-800 bg-opacity-50 text-green-100 font-semibold border border-green-600 shadow"
+                      ? "bg-[var(--active-goal-color)] bg-opacity-20 text-white font-semibold border border-[var(--active-goal-color)] shadow"
                       : "text-gray-300 hover:bg-gray-700 hover:text-white"
                   }`}
                 >

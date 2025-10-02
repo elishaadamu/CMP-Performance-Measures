@@ -9,6 +9,7 @@ const HierarchicalTree = () => {
     name: "Performance Measures",
     children: [
       {
+        measures: "Travel Time, Delay, Drive Alone",
         name: "Congestion",
         children: [
           {
@@ -41,6 +42,8 @@ const HierarchicalTree = () => {
         ],
       },
       {
+        measures:
+          "Reliability, Truck Reliability, Miles Traveled (Interstate),  Miles Traveled (Non-Interstate)",
         name: "Reliability",
         children: [
           {
@@ -84,6 +87,7 @@ const HierarchicalTree = () => {
         ],
       },
       {
+        measures: "Trip Length, EJ-Transit Access, Transit-Job Access, Access",
         name: "Access",
         children: [
           {
@@ -128,6 +132,7 @@ const HierarchicalTree = () => {
         ],
       },
       {
+        measures: "Fatality - Injury",
         name: "Safety",
         children: [
           {
