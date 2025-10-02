@@ -27,7 +27,7 @@ const CustomTooltip = ({ active, payload, label, yAxisLabel }) => {
               style={{ backgroundColor: pld.color }}
             ></span>
             <span>
-              {pld.name}: {parseFloat(pld.value).toFixed(2)}
+              {pld.name}: {parseFloat(pld.value).toFixed(1)}
             </span>
           </div>
         ))}
@@ -46,6 +46,7 @@ const LineChart = ({
   yAxisLabel,
   legendFontSize,
   yAxisTickFormatter,
+  isPercentage,
   onLegendClick,
   toggledLegends = {},
   originalLines,
@@ -69,8 +70,8 @@ const LineChart = ({
             margin={{
               top: 20, // Increased top margin for legend
               right: 30,
-              left: 50,
-              bottom: 5,
+              left: 60,
+              bottom: 20,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#555" />
@@ -87,11 +88,12 @@ const LineChart = ({
               />
             </XAxis>
             <YAxis
-              domain={["dataMin - 0.05", "dataMax + 0.05"]}
+              domain={[isPercentage ? 10 : "auto", "auto"]}
+              tickCount={6}
               tickFormatter={
                 yAxisTickFormatter
                   ? yAxisTickFormatter
-                  : (tick) => tick.toFixed(2)
+                  : (tick) => tick.toFixed(1)
               }
               tick={{ fill: "#ccc" }}
             >

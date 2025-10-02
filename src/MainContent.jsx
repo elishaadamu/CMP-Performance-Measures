@@ -118,7 +118,7 @@ const MainContent = ({ data }) => {
           ].filter(
             (line) => !toggledLegends["Travel Time Reliability"]?.[line.key]
           ),
-          xAxisKey: "Year",
+          xAxisKey: "year",
           yAxisLabel: "Commute Time (minutes)",
           onLegendClick: (dataKey) =>
             handleLegendClick("Travel Time Reliability", dataKey),

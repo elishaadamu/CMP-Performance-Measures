@@ -69,7 +69,7 @@ const StackedBarChart = ({
             margin={{
               top: 20,
               right: 30,
-              left: 50, // Increased left margin
+              left: 60, // Increased left margin
               bottom: 20,
             }}
           >
