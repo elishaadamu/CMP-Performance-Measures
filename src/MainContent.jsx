@@ -36,7 +36,7 @@ const MainContent = ({ data }) => {
       component: LineChart,
       props: {
         data: [
-          { year: 2018, value: 1.12 },
+          { year: 2018, value: 1.14 },
           { year: 2019, value: 1.1 },
           { year: 2020, value: 1.05 },
           { year: 2021, value: 1.08 },
