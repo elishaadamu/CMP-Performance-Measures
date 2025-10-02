@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import * as d3 from "d3";
 import LineChart from "./charts/LineChart.jsx";
 import BarChart from "./charts/BarChart.jsx";
 import StackedBarChart from "./charts/StackedBarChart.jsx";
+import ComposedChart from "./charts/ComposedChart.jsx";
 
 const goalColors = ["#b6cb1a", "#f87c01", "#0481f7", "#3cbcb6", "#e34c00"];
+
 const MainContent = ({ data }) => {
   const objectives = data.children;
   const [activeObjectiveName, setActiveObjectiveName] = useState(
@@ -11,6 +14,7 @@ const MainContent = ({ data }) => {
   );
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  const [chartData, setChartData] = useState({});
   const [activeMeasureName, setActiveMeasureName] = useState(
     objectives[0]?.children[0]?.name
   );
@@ -30,79 +34,113 @@ const MainContent = ({ data }) => {
   const activeMeasure = measures.find((m) => m.name === activeMeasureName);
   const performanceMeasureContent = activeMeasure?.children || [];
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const dataSources = {
+        "Travel Times": "data/1_tti_am_pm.csv",
+        "Travel Time Reliability": "data/3_pti_am_pm.csv",
+        Fatalities: "data/10_14_safety.csv",
+        "Trip Length": "data/7_trip_length.csv",
+      };
+
+      const loadedData = {};
+      for (const key in dataSources) {
+        try {
+          const csvData = await d3.csv(dataSources[key]);
+          loadedData[key] = csvData;
+        } catch (error) {
+          console.error(`Error loading data for ${key}:`, error);
+          loadedData[key] = [];
+        }
+      }
+      setChartData(loadedData);
+    };
+
+    fetchData();
+  }, []);
+
   // --- Sample Data and Chart Configuration ---
   const chartConfig = {
     "Travel Times": {
       component: LineChart,
       props: {
-        data: [
-          { year: 2018, value: 1.14 },
-          { year: 2019, value: 1.1 },
-          { year: 2020, value: 1.05 },
-          { year: 2021, value: 1.08 },
-          { year: 2022, value: 1.02 },
-        ],
+        data: chartData["Travel Times"],
         title: "Average Travel Time Index (TTI)",
-        dataKey: "value",
+        lines: [
+          { key: "AM", name: "AM Peak", color: "#8884d8" },
+          { key: "PM", name: "PM Peak", color: "#82ca9d" },
+        ],
         xAxisKey: "year",
         yAxisLabel: "TTI",
       },
     },
-    Delay: {
-      component: BarChart,
+    "Travel Time Reliability": {
+      component: LineChart,
       props: {
-        data: [
-          { year: 2018, delay: 40 },
-          { year: 2019, delay: 42 },
-          { year: 2020, delay: 35 },
-          { year: 2021, delay: 38 },
-          { year: 2022, delay: 36 },
+        data: chartData["Travel Time Reliability"],
+        title: "Planning Time Index (PTI)",
+        lines: [
+          { key: "AM", name: "AM Peak", color: "#8884d8" },
+          { key: "PM", name: "PM Peak", color: "#82ca9d" },
         ],
-        title: "Annual Peak Hours of Excessive Delay",
-        dataKey: "delay",
-        xAxisKey: "year",
-        yAxisLabel: "Hours",
+        xAxisKey: "Year",
+        yAxisLabel: "PTI",
       },
     },
-    "Non-SOV Travel": {
-      component: BarChart,
-      props: {
-        data: [
-          { year: 2018, percent: 25 },
-          { year: 2019, percent: 26 },
-          { year: 2020, percent: 28 },
-          { year: 2021, percent: 29 },
-          { year: 2022, percent: 31 },
-        ],
-        title: "Percent of Non-SOV Travel",
-        dataKey: "percent",
-        xAxisKey: "year",
-        yAxisLabel: "Percentage (%)",
-      },
-    },
-    "Job Access": {
+    "Trip Length": {
       component: StackedBarChart,
       props: {
-        data: [
-          { name: "2020", transit: 4000, walking: 2400, biking: 2000 },
-          { name: "2021", transit: 4500, walking: 2800, biking: 2200 },
-          { name: "2022", transit: 5000, walking: 3000, biking: 2500 },
-        ],
-        title: "Jobs Accessible within 30 Mins",
+        data: chartData["Trip Length"],
+        title: "Average Trip Length by Mode",
         keys: [
-          { key: "transit", name: "By Transit" },
-          { key: "walking", name: "By Walking" },
-          { key: "biking", name: "By Biking" },
+          { key: "DA", name: "Drive Alone" },
+          { key: "cp", name: "Carpool" },
+          { key: "pt", name: "Public Transit" },
         ],
-        xAxisKey: "name",
-        yAxisLabel: "Number of Jobs",
+        xAxisKey: "year",
+        yAxisLabel: "Average Trip Length (minutes)",
+        groupBy: "NAME",
+      },
+    },
+    Fatalities: {
+      component: ComposedChart,
+      props: {
+        data: chartData["Fatalities"],
+        title: "Safety Performance",
+        bars: [
+          { key: "Fatalities", name: "Fatalities", color: "#8884d8" },
+          { key: "SI", name: "Serious Injuries", color: "#82ca9d" },
+        ],
+        lines: [
+          {
+            key: "fat_rate",
+            name: "Fatality Rate",
+            color: "#ff7300",
+            yAxisId: "right",
+          },
+          {
+            key: "si_rate",
+            name: "Serious Injury Rate",
+            color: "#387908",
+            yAxisId: "right",
+          },
+        ],
+        xAxisKey: "year",
+        yAxisLabel: "Count",
+        yAxisLabelRight: "Rate",
       },
     },
   };
 
   const renderChart = () => {
     const config = chartConfig[activeMeasure.name];
-    if (!config) return null;
+    if (!config || !config.props.data) {
+      return (
+        <div className="flex items-center justify-center h-full">
+          <p className="text-gray-500">Loading chart data...</p>
+        </div>
+      );
+    }
     const ChartComponent = config.component;
     return <ChartComponent {...config.props} />;
   };
@@ -112,7 +150,7 @@ const MainContent = ({ data }) => {
       {/* Horizontal Goal Tabs */}
       <div className="border-b border-gray-200 pb-2">
         <nav
-          className="-mb-px flex flex-wrap gap-1 justify-center"
+          className="-mb-px flex flex-wrap gap-4 justify-center"
           aria-label="Tabs"
         >
           {objectives.map((objective, index) => (

@@ -9,7 +9,7 @@ const HierarchicalTree = () => {
     name: "Performance Measures",
     children: [
       {
-        name: "Reduce Highway Congestion",
+        name: "Congestion",
         children: [
           {
             name: "Travel Times",
@@ -41,7 +41,7 @@ const HierarchicalTree = () => {
         ],
       },
       {
-        name: "Improve System Reliability",
+        name: "Reliability",
         children: [
           {
             name: "Travel Time Reliability",
@@ -84,7 +84,7 @@ const HierarchicalTree = () => {
         ],
       },
       {
-        name: "Expand Equitable Access to Transit",
+        name: " Access",
         children: [
           {
             name: "Trip Length",
@@ -128,7 +128,7 @@ const HierarchicalTree = () => {
         ],
       },
       {
-        name: "Reduce motorized fatalities and serious injuries",
+        name: "Safety",
         children: [
           {
             name: "Fatalities",
